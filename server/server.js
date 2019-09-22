@@ -36,6 +36,18 @@ callback function argument (socket) */
         //     createdAt: 343
         // });
 
+        //task1 : socket.emit from Admin text Welcome to the chat app
+        socket.emit('newMessage', {
+            from: 'Admin',
+            text:'Welcome to the chat app',
+            createdAt: new Date().getTime()
+        });
+        //task2 : socket.broadcast.emit from Admin text New user joined
+        socket.broadcast.emit('newMessage', {
+            from: 'Admin',
+            text: 'New user joined',
+            createdAt: new Date().getTime()
+        })
         socket.on('createMessage', (newMessage)=>{
             console.log('createMessage', newMessage);
 
@@ -49,7 +61,13 @@ callback function argument (socket) */
                from: newMessage.from,
                text: newMessage.text,
                createdAt: new Date().getTime()
-           })
+           });
+
+           /*We can use broadcast to broadcast messages to all receivers except sender 
+           by using this method  socket.broadcast.emit('', {}); 
+           
+           socket.broadcast.emit('newMessage', {from: 'A', text:'Good morning all', createdAt: new Date().getTime() })*/
+
         });
         
         socket.on('disconnect', ()=>{
