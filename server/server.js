@@ -24,18 +24,28 @@ callback function argument (socket) */
 
     io.on('connection', (socket)=>{
         console.log('New User Connected');
+        
+        /* calling a socket method emit()
+        we use emit on both client and server side to emit events
+       emit is very similar to listeners
+       Here, instead of listening to event we are creating the custom event
+        */
+        socket.emit('newMessage', {
+            from: 'Aditya@gmail.com',
+            text:'Hey, what is going on',
+            createdAt: 343
+        });
 
+        socket.on('createMessage', (newMessage)=>{
+            console.log('createMessage', newMessage);
+        });
+        
         socket.on('disconnect', ()=>{
             console.log('User was disconnected');
         });
     }); 
     
-
-
-// app.listen(PORT, ()=> {
-//     console.log(`Server is up on ${PORT}`);
-// });
-
+ 
 // for heroku dynos we need to use process.env.PORT directly in app.listen
 // express uses builtin node_module called http uses(http.createServer()) to built this server 
 // now change from app.listen to server.listen
