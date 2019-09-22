@@ -58,7 +58,7 @@ callback function argument (socket) */
         // replace task2
         socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User joined'));
 
-        socket.on('createMessage', (newMessage)=>{
+        socket.on('createMessage', (newMessage, callback)=>{
             console.log('createMessage', newMessage);
 
             // Now Broadcast Events  task4
@@ -75,7 +75,9 @@ callback function argument (socket) */
 
 
         //replace task4
-        io.emit('newMessage', generateMessage(newMessage.from, newMessage.text))
+        io.emit('newMessage', generateMessage(newMessage.from, newMessage.text));
+
+        callback('This is from the server');
            /*We can use broadcast to broadcast messages to all receivers except sender 
            by using this method  socket.broadcast.emit('', {}); 
            

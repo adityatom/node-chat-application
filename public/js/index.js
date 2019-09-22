@@ -19,4 +19,26 @@ console.log('Disconnected from server');
 // creating custom event newMessage 2
 socket.on('newMessage', function (message) {
 console.log('New Message', message);
+var li = jQuery('<li></li>');
+li.text(`${message.from}: ${message.text}`);
+jQuery('#messages').append(li);
+});
+
+//4
+socket.emit('createMessage', {
+    from: 'Aditya',
+    text: 'Hi'
+}, function (resfromserver){
+    console.log('Got it', resfromserver);
+});
+
+jQuery('#message-form').on('submit', function(e) {
+e.preventDefault();
+
+socket.emit('createMessage', {
+    from: 'aaaa',
+    text: jQuery('[name=message]').val()
+}, function() {
+    
+});
 });
