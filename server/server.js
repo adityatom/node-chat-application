@@ -9,6 +9,8 @@ const http = require('http');
 const express = require('express');
 const socketIO = require("socket.io");
 
+const {generateMessage} = require('./utils/message');
+
 const publicPath = path.join(__dirname, '../public');
 const PORT = process.env.PORT || 3000;
 
@@ -37,32 +39,43 @@ callback function argument (socket) */
         // });
 
         //task1 : socket.emit from Admin text Welcome to the chat app
-        socket.emit('newMessage', {
-            from: 'Admin',
-            text:'Welcome to the chat app',
-            createdAt: new Date().getTime()
-        });
+        // socket.emit('newMessage', {
+        //     from: 'Admin',
+        //     text:'Welcome to the chat app',
+        //     createdAt: new Date().getTime()
+        // });
+
+        // replace task1
+        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
         //task2 : socket.broadcast.emit from Admin text New user joined
-        socket.broadcast.emit('newMessage', {
-            from: 'Admin',
-            text: 'New user joined',
-            createdAt: new Date().getTime()
-        })
+        // socket.broadcast.emit('newMessage', {
+        //     from: 'Admin',
+        //     text: 'New user joined',
+        //     createdAt: new Date().getTime()
+        // });
+
+
+        // replace task2
+        socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User joined'));
+
         socket.on('createMessage', (newMessage)=>{
             console.log('createMessage', newMessage);
 
-            // Now Broadcast Events 
+            // Now Broadcast Events  task4
             /* 
             For broadcast events we use io.emit()
             socket.emit() = emits an event to a single connection
             io.emit () = emits an event to every single connection
             */
-           io.emit('newMessage', {
-               from: newMessage.from,
-               text: newMessage.text,
-               createdAt: new Date().getTime()
-           });
+        //    io.emit('newMessage', {
+        //        from: newMessage.from,
+        //        text: newMessage.text,
+        //        createdAt: new Date().getTime()
+        //    });
 
+
+        //replace task4
+        io.emit('newMessage', generateMessage(newMessage.from, newMessage.text))
            /*We can use broadcast to broadcast messages to all receivers except sender 
            by using this method  socket.broadcast.emit('', {}); 
            
