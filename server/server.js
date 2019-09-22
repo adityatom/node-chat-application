@@ -7,15 +7,16 @@ const path = require("path");
 const express = require('express');
 
 const publicPath = path.join(__dirname, '../public');
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 var app = express();
 
 app.use(express.static(publicPath));
 
-app.listen(port, ()=> {
-    console.log(`Server is up on ${port}`);
-});
+// app.listen(PORT, ()=> {
+//     console.log(`Server is up on ${PORT}`);
+// });
 
-// git remote add origin https://github.com/adityatom/node-chat-application.git
-// git push -u origin master
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });
