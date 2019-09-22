@@ -30,14 +30,26 @@ callback function argument (socket) */
        emit is very similar to listeners
        Here, instead of listening to event we are creating the custom event
         */
-        socket.emit('newMessage', {
-            from: 'Aditya@gmail.com',
-            text:'Hey, what is going on',
-            createdAt: 343
-        });
+        // socket.emit('newMessage', {
+        //     from: 'Aditya@gmail.com',
+        //     text:'Hey, what is going on',
+        //     createdAt: 343
+        // });
 
         socket.on('createMessage', (newMessage)=>{
             console.log('createMessage', newMessage);
+
+            // Now Broadcast Events 
+            /* 
+            For broadcast events we use io.emit()
+            socket.emit() = emits an event to a single connection
+            io.emit () = emits an event to every single connection
+            */
+           io.emit('newMessage', {
+               from: newMessage.from,
+               text: newMessage.text,
+               createdAt: new Date().getTime()
+           })
         });
         
         socket.on('disconnect', ()=>{

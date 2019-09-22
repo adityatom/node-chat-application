@@ -5,10 +5,10 @@ socket.on('connect', ()=>{
 console.log('Connected to server');
 
 // 2.1 createMessage event
-    socket.emit('createMessage',{
-        to: 'vardhan@gmail.com',
-        text:'Hey, This is Adi.'
-    });
+    // socket.emit('createMessage',{
+    //     to: 'vardhan@gmail.com',
+    //     text:'Hey, This is Adi.'
+    // });
 });
 
 //3
