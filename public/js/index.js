@@ -17,13 +17,23 @@ console.log('Disconnected from server');
 });
 
 // creating custom event newMessage 2
-socket.on('newMessage', function (message) {
-console.log('New Message', message);
-var li = jQuery('<li></li>');
-li.text(`${message.from}: ${message.text}`);
-jQuery('#messages').append(li);
-});
+    socket.on('newMessage', function (message) {
+    console.log('New Message', message);
+    var li = jQuery('<li></li>');
+    li.text(`${message.from}: ${message.text}`);
+    jQuery('#messages').append(li);
+    });
 
+    //  new location message with anchor tag
+    socket.on('newLocationMessage', function(message){
+        var li = jQuery('<li></li>');
+        var a = jQuery('<a target="_blank">My Current Location</a>');
+
+        li.text(`${message.from}: `);
+        a.attr('href', message.url);
+        li.append(a);
+        jQuery('#messages').append(li);
+    });
 //4
 socket.emit('createMessage', {
     from: 'Aditya',
