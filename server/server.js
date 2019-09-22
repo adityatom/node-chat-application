@@ -77,7 +77,7 @@ callback function argument (socket) */
         //replace task4
         io.emit('newMessage', generateMessage(newMessage.from, newMessage.text));
 
-        callback('This is from the server');
+        callback();
            /*We can use broadcast to broadcast messages to all receivers except sender 
            by using this method  socket.broadcast.emit('', {}); 
            
