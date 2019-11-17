@@ -1,4 +1,21 @@
 var socket = io(); // io is a method available to us // when we call these io(); 
+
+ // scrollToBottom function 
+ function scrollToBottom() {
+    // Selectors
+     var messages = jQuery('#messages');
+     var newMessage = messages.children('li:last-child')
+    // Heights
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeigth = newMessage.prev().innerHeight();
+
+    if(clientHeight + scrollTop + newMessageHeight + lastMessageHeigth >= scrollHeight) {
+        messages.scrollTop(scrollHeight);
+   }
+ }
 // it will initiating the request from the client to the server to open up a websocket to keep that connection open 
 //1
 socket.on('connect', ()=>{
@@ -18,7 +35,6 @@ console.log('Disconnected from server');
 
 // creating custom event newMessage 2
     socket.on('newMessage', function (message) {
-        
         var formattedTime = moment(message.createdAt).format('h:mm a');
         var template = jQuery('#message-template').html();
         var html = Mustache.render(template, {
@@ -28,6 +44,7 @@ console.log('Disconnected from server');
         });
         
         jQuery('#messages').append(html);
+        scrollToBottom();
     //     // console.log('New Message', message);
     // var li = jQuery('<li></li>');
     // li.text(`${message.from} ${formattedTime}: ${message.text}`);
