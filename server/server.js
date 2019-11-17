@@ -11,6 +11,10 @@ const socketIO = require("socket.io");
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 
+const {isRealString} = require('./utils/validation');
+
+const {Users} = require('./utils/users');
+
 const publicPath = path.join(__dirname, '../public');
 const PORT = process.env.PORT || 3000;
 
@@ -19,6 +23,7 @@ var app = express(); // we use express to make our webserver
 var server = http.createServer(app); // creating http server
 var io = socketIO(server); // configure the server to use socketIO
 
+var users = new Users(); // instance
 app.use(express.static(publicPath)); // configuring middle ware
 
 /* let's you register an event listener, connection is used for client-server
@@ -46,7 +51,7 @@ callback function argument (socket) */
         // });
 
         // replace task1
-        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+        //socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
         //task2 : socket.broadcast.emit from Admin text New user joined
         // socket.broadcast.emit('newMessage', {
         //     from: 'Admin',
@@ -56,7 +61,31 @@ callback function argument (socket) */
 
 
         // replace task2
-        socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User joined'));
+        // socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User joined'));
+
+        // join in to room
+        socket.on('join', (params, callback) => {
+            if(!isRealString(params.name) || !isRealString(params.room)) {
+              return callback('Name and room name are required.');
+            }
+
+            socket.join(params.room);
+            users.removeUser(socket.id);
+            users.addUser(socket.id, params.name, params.room);
+
+            // socket.leave(params.room);
+            
+            // io.emit -> io.to('office room').emit
+            io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+            //socket.broadcast.emit -> socket.broadcast.to('office room').emit
+
+            //socket.emit -> 
+
+            socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+            socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`));
+
+            callback();
+        });
 
         socket.on('createMessage', (newMessage, callback)=>{
             console.log('createMessage', newMessage);
@@ -90,6 +119,11 @@ callback function argument (socket) */
             io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
         });
         socket.on('disconnect', ()=>{
+            var user = users.removeUser(socket.id);
+            if (user) {
+                io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+                io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left`));
+            }
             console.log('User was disconnected');
         });
     }); 

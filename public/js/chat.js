@@ -20,7 +20,18 @@ var socket = io(); // io is a method available to us // when we call these io();
 //1
 socket.on('connect', ()=>{
 console.log('Connected to server');
+var params = jQuery.deparam(window.location.search);
 
+socket.emit('join', params, function(err) {
+
+    if(err) {
+        alert(err);
+        window.location.href = '/';
+    }
+    else {
+        console.log('No error');
+    }
+})
 // 2.1 createMessage event
     // socket.emit('createMessage',{
     //     to: 'vardhan@gmail.com',
@@ -32,6 +43,17 @@ console.log('Connected to server');
 socket.on('disconnect', ()=>{
 console.log('Disconnected from server');
 });
+
+socket.on('updateUserList', (users)=>{
+    var ol = jQuery('<ol></ol>');
+
+    users.forEach(function (user) {
+        ol.append(jQuery('<li></li>').text(user));
+    });
+    jQuery('#users').html(ol);
+    console.log('users list', users);
+});
+
 
 // creating custom event newMessage 2
     socket.on('newMessage', function (message) {
